@@ -14,7 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
+import com.project.identranaccess.Fragment.LottieDialogFragment;
 import com.project.identranaccess.R;
+import com.project.identranaccess.database.Utility;
 import com.project.identranaccess.databinding.ActivityLoginBinding;
 import com.project.identranaccess.model.RegisterDataModel;
 
@@ -24,6 +26,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private ActivityLoginBinding binding;
     private FirebaseAuth mAuth;
     FirebaseFirestore db;
+    LottieDialogFragment loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        loader = new LottieDialogFragment(this);
 
         // setSupportActionBar(binding.toolbar);
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
@@ -92,11 +96,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void signInUser() {
 
         mAuth.signInWithEmailAndPassword(Objects.requireNonNull(binding.etMob.getText()).toString(), Objects.requireNonNull(binding.editPassword.getText()).toString()).addOnCompleteListener(task -> {
+           loader.show();
             if (task.isSuccessful()) {
+                loader.cancel();
                 getCurrentUserData(Objects.requireNonNull(task.getResult().getUser()).getUid());
+                Utility.addUserId(getApplicationContext(),"userId",task.getResult().getUser().getUid());
+
+
             } else {
                // hideProgress();
                 Toast.makeText(LoginActivity.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
+                loader.cancel();
 
             }
 

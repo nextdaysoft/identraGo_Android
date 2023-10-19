@@ -2,11 +2,16 @@ package com.project.identranaccess.Activity;
 
 import static android.content.ContentValues.TAG;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputFilter;
@@ -18,6 +23,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.ui.AppBarConfiguration;
 
 import com.google.android.gms.tasks.Continuation;
@@ -37,12 +44,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.project.identranaccess.database.MyLocalDatabase;
+import com.project.identranaccess.database.Utility;
 import com.project.identranaccess.databinding.ActivityEditProfileBinding;
 import com.project.identranaccess.model.ProfileData;
+import com.project.identranaccess.model.RegisterDataModel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 
 public class EditProfileActivity extends AppCompatActivity {
     private static final int SELECT_FILE = 1;
@@ -58,7 +68,9 @@ public class EditProfileActivity extends AppCompatActivity {
     Bitmap imageBitmap;
     DatabaseReference databaseReference;
     Uri taskResult;
-
+    RegisterDataModel profileModel;
+    private static final int CAMERA_PERMISSION_CODE = 100;
+    private static final int STORAGE_PERMISSION_CODE = 101;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,8 +80,9 @@ public class EditProfileActivity extends AppCompatActivity {
         myLocalDatabase = new MyLocalDatabase(this);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+        profileModel=new RegisterDataModel();
         //   binding.etAdminName.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
-        binding.etUserpos.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
+        binding.etUserLocationId.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
         binding.etUserName.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
         db = FirebaseFirestore.getInstance();
@@ -77,33 +90,29 @@ public class EditProfileActivity extends AppCompatActivity {
 
         databaseReference = firebaseDatabase.getReference();
 
+        checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
+        checkPermission(Manifest.permission.CAMERA, CAMERA_PERMISSION_CODE);
+
         binding.BtnSumbit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            //    getimage();
-
-                /*Bitmap image = ((BitmapDrawable)binding.profileImage.getDrawable()).getBitmap();
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                image.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
-                image.recycle();*/
                 if (binding.etUserName.getText().toString().trim().isEmpty()) {
                     binding.etUserName.setError("Por favor ingresa tu Usuario");
                     binding.etUserName.requestFocus();
-                } else if (binding.etAdminName.getText().toString().trim().isEmpty()) {
-                    binding.etAdminName.setError("Campos requeridos");
-                    binding.etAdminName.requestFocus();
+                } else if (binding.etUserEmailId.getText().toString().trim().isEmpty()) {
+                    binding.etUserEmailId.setError("Campos requeridos");
+                    binding.etUserEmailId.requestFocus();
                 } else if (binding.etMob.getText().toString().trim().isEmpty()) {
                     binding.etMob.setError("Campos requeridos");
                     binding.etMob.requestFocus();
-                } else if (binding.etUserpos.getText().toString().trim().isEmpty()) {
-                    binding.etUserpos.setError("Campos requeridos");
-                    binding.etUserpos.requestFocus();
+                } else if (binding.etUserLocationId.getText().toString().trim().isEmpty()) {
+                    binding.etUserLocationId.setError("Campos requeridos");
+                    binding.etUserLocationId.requestFocus();
                 } else {
                     profile_Data(taskResult,binding.etUserName.getText().toString().trim(),
-                            binding.etAdminName.getText().toString().trim(),
+                            binding.etUserEmailId.getText().toString().trim(),
                             binding.etMob.getText().toString().trim(),
-                            binding.etUserpos.getText().toString().trim());
+                            binding.etUserLocationId.getText().toString().trim());
                 }
             }
         });
@@ -118,14 +127,9 @@ public class EditProfileActivity extends AppCompatActivity {
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int item) {
-                        //   boolean result=Utility.checkPermission(MainActivity.this);
                         if (items[item].equals("TOMAR FOTO")) {
-                            // userChoosenTask="Take Photo";
-                            //      if(result)
                             cameraIntent();
                         } else if (items[item].equals("ELIGE DE LA BIBLIOTECA")) {
-                            //userChoosenTask="Choose from Library";
-                            // if(result)
                             galleryIntent();
                         } else if (items[item].equals("CANCELAR")) {
                             dialog.dismiss();
@@ -137,57 +141,51 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void getimage() {
-        DatabaseReference getImage = databaseReference.child("images");
-        getImage.addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                        String link = dataSnapshot.getValue(String.class);
-                        Log.e(TAG, "onDataChange: " + link.toString());
-
-                        //     Picasso.get().load(link).into(rImage);
-                    }
-
-                    // this will called when any problem
-                    // occurs in getting data
-                    @Override
-                    public void onCancelled(
-                            @NonNull DatabaseError databaseError) {
-                        // we are showing that error message in toast
-                        Toast.makeText(EditProfileActivity.this, "Error Loading Image", Toast.LENGTH_SHORT).show();
-                    }
-                });
+  private void checkPermission(String permission, int requestCode) {
+        if (ContextCompat.checkSelfPermission(EditProfileActivity.this, permission) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(EditProfileActivity.this, new String[] { permission }, requestCode);
+        }
+        else {
+         //   Toast.makeText(EditProfileActivity.this, "Permission already granted", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void profile_Data(Uri downloadUrl, String name, String email, String mobileno, String pos) {
 
         CollectionReference dbCourses = db.collection("userprofileDetails");
+        profileModel.setName(Objects.requireNonNull(binding.etUserName.getText()).toString().trim());
+        profileModel.setEmail(Objects.requireNonNull(binding.etUserEmailId.getText()).toString().trim());
+        profileModel.setMobile(Objects.requireNonNull(binding.etMob.getText()).toString().trim());
+        profileModel.setImage(Objects.requireNonNull(String.valueOf(downloadUrl)));
+        profileModel.setLocation(Objects.requireNonNull(binding.etUserLocationId.getText()).toString().trim());
+        profileModel.setUserId(Objects.requireNonNull(Utility.getUserId(this,"userId")));
 
-        // adding our data to our courses object class.
-        ProfileData profileModel = new ProfileData(downloadUrl, name, email, mobileno, pos);
+      //  = new ProfileData(downloadUrl, name, email, mobileno, pos);
+        db.collection("RegisterUser").document(Utility.getUserId(this,"userId"))
+                .update("mobile", binding.etMob.getText().toString().trim(),
+                        "email",binding.etUserEmailId.getText().toString().trim(),
+                        "name",binding.etUserName.getText().toString().trim(),
+                        "image",String.valueOf(downloadUrl),
+                        "loc",binding.etUserLocationId.getText().toString().trim());
 
-        dbCourses.add(profileModel).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+     /*   dbCourses.add(profileModel).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 //  dialogFragment.hideDialog();
-
                 Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w(TAG, "Error adding document", e);
             }
-        });
+        })*/;
     }
 
     private void galleryIntent() {
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);//
+        intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
 
     }
@@ -222,17 +220,17 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void uploadImagebitmap(Bitmap imageBitmap) {
+    private void uploadImagebitmap(Bitmap bitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(getContentResolver(), imageBitmap, "Title", null);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "Title", null);
         Uri.parse(path);
         uploadImage(Uri.parse(path));
     }
 
     private void uploadImage(Uri imageBitmap) {
 
-        final StorageReference imgReference  = storageReference.child("2gjfdhdhdhg").child("userImage.png");
+        final StorageReference imgReference  = storageReference.child(Utility.getUserId(this,"userId")).child("userImage.png");
         UploadTask uploadTask = imgReference.putFile(imageBitmap);
         uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
@@ -254,5 +252,30 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode,
+                permissions,
+                grantResults);
 
+        if (requestCode == CAMERA_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(EditProfileActivity.this, "Camera Permission Granted", Toast.LENGTH_SHORT) .show();
+            }
+            else {
+                Toast.makeText(EditProfileActivity.this, "Camera Permission Denied", Toast.LENGTH_SHORT) .show();
+            }
+        }
+              else if (requestCode == STORAGE_PERMISSION_CODE) {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(EditProfileActivity.this, "Storage Permission Granted", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(EditProfileActivity.this, "Storage Permission Denied", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
 }

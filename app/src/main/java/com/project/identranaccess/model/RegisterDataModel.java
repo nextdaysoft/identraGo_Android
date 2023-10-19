@@ -3,8 +3,34 @@ package com.project.identranaccess.model;
 public class RegisterDataModel {
   public   String email;
   public   String mobile;
-  public   String password;
   public   String  userId;
+    public String  image;
+    private String Name;
+    private String Location;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
+    public String getLocation() {
+        return Location;
+    }
+
+    public void setLocation(String location) {
+        Location = location;
+    }
 
     public String getUserId() {
         return userId;
@@ -13,12 +39,6 @@ public class RegisterDataModel {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-
-   /* public RegisterDataModel(String email, String mobileNo, String password) {
-        this.email =email;
-        this.mobile=mobileNo;
-        this.password=password;
-    }*/
 
     public String getEmail() {
         return email;
@@ -36,12 +56,6 @@ public class RegisterDataModel {
         this.mobile = mobile;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
 }

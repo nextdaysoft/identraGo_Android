@@ -1,5 +1,6 @@
 package com.project.identranaccess.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,35 +20,35 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.project.identranaccess.Activity.QRPageActivity;
-import com.project.identranaccess.Fragment.FavListFragment;
 import com.project.identranaccess.Fragment.VisitorFragment;
 import com.project.identranaccess.FragmentCommunication;
 import com.project.identranaccess.R;
-import com.project.identranaccess.database.MyLocalDatabase;
 import com.project.identranaccess.model.FavData;
 import com.project.identranaccess.model.VisitorData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class VisitorDisplayDataAdapter extends RecyclerView.Adapter<VisitorDisplayDataAdapter.ViewHolder> implements Filterable {
-    private ArrayList<VisitorData> visitorData;
-    private final ArrayList<VisitorData> fullList = new ArrayList<>();
+    private List<VisitorData> visitorData;
+    private final List<VisitorData> fullList = new ArrayList<>();
 
     ArrayList<FavData> favData;
     private Context context;
-    MyLocalDatabase dbHandler;
+    FirebaseFirestore db;
     boolean clicked = true;
     private FragmentCommunication mCommunicator;
     //  int isfav;
 
 
-    public VisitorDisplayDataAdapter(ArrayList<VisitorData> visitdataArraylist, Context mContext, ArrayList<FavData> favData) {
+    public VisitorDisplayDataAdapter(List<VisitorData> visitdataArraylist, Context mContext) {
         this.visitorData = visitdataArraylist;
         this.favData = favData;
         this.context = mContext;
         fullList.addAll(visitdataArraylist);
-
+        db = FirebaseFirestore.getInstance();
     }
 
     @NonNull
@@ -58,25 +59,23 @@ public class VisitorDisplayDataAdapter extends RecyclerView.Adapter<VisitorDispl
     }
 
     @Override
-    public void onBindViewHolder(@NonNull VisitorDisplayDataAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull VisitorDisplayDataAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         VisitorData modal = visitorData.get(position);
-        dbHandler = new MyLocalDatabase(context);
 
-        holder.reasonFor_ET.setText(modal.getReasonofvisit());
+        holder.reasonFor_ET.setText(modal.getReasonOfVisit());
         String combinetext = modal.getName() + " " + modal.getLastName();
         holder.name.setText(combinetext);
 
-  /*      for (int i = 0; i < favData.size(); i++) {
-            if (modal.getCode().equalsIgnoreCase(favData.get(i).getCode())) {
-                holder.like_btn.setImageResource(R.drawable.heart);
-            } else {
-                holder.like_btn.setImageResource(R.drawable.like_button);
-            }
-        }*/
-    //    Log.e("getid", "onBindViewHoldermodel: " +modal.getId());
-        Log.e("getid", "onBindViewHoldermodel:new " +modal.getId());
+        //      for (int i = 0; i < favData.size(); i++) {
+        if (modal.getClicked()) {
+            holder.like_btn.setImageResource(R.drawable.heart);
+        } else {
+            holder.like_btn.setImageResource(R.drawable.like_button);
+        }
+        //  }
+        Log.e("getid", "onBindViewHoldermodel:new " + modal.getName());
 
-        for (int i = 0; i < favData.size(); i++) {
+     /*   for (int i = 0; i < favData.size(); i++) {
             Log.e("getid", "onBindViewHolder.....: " +favData.get(i).getId());
             if (modal.getId().equalsIgnoreCase(favData.get(i).getId())) {
                 holder.like_btn.setImageResource(R.drawable.heart);
@@ -88,29 +87,42 @@ public class VisitorDisplayDataAdapter extends RecyclerView.Adapter<VisitorDispl
                 // dbHandler.addfavListData(modal.getName(), modal.getLastName(), modal.getVisitDate(), modal.getComment(), modal.getReasonofvisit(), modal.getCode());
             }
 
-        }
-
-
+        }*/
         holder.like_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(clicked){
-                    clicked=true;
-                    holder.like_btn.setImageResource(R.drawable.heart);
-                    dbHandler.addfavListData(modal.getName(), modal.getLastName(), modal.getReasonofvisit(), modal.getVisitDate(), modal.getComment(), modal.getCode(), modal.getId());
 
-                    FavListFragment fragmentB = new FavListFragment();
+
+                if (modal.getClicked()) {
+                    db.collection("createNewUser").document(modal.getUniqueId()).update("clicked", false);
+                    modal.setClicked(false);
+                } else {
+                    db.collection("createNewUser").document(modal.getUniqueId()).update("clicked", true);
+                    modal.setClicked(true);
+
+                }
+
+                notifyItemChanged(position, "clicked");
+
+
+
+               /* if(!modal.getClicked()){
+                        db.collection("createNewUser").document(modal.getUniqueId()).update("clicked",true);
+                  //  clicked=true;
+              //      holder.like_btn.setImageResource(R.drawable.heart);
+                   // dbHandler.addfavListData(modal.getName(), modal.getLastName(), modal.getReasonofvisit(), modal.getVisitDate(), modal.getComment(), modal.getCode(), modal.getId());
+                   *//* FavListFragment fragmentB = new FavListFragment();
                     FragmentManager fm = ((AppCompatActivity) context).getSupportFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
                     ft.replace(R.id.fragment_container, fragmentB);
-                    ft.commit();
-                }
-                  //  clicked=true;
-                   // dbHandler.remove(modal.getCode());
+                    ft.commit();*//*
+                }*/
+                //  clicked=true;
+                // dbHandler.remove(modal.getCode());
 
-                for (int i = 0; i < favData.size(); i++) {
+               /* for (int i = 0; i < favData.size(); i++) {
                     if (modal.getId().equalsIgnoreCase(favData.get(i).getId())) {
-                        dbHandler.remove(modal.getCode());
+                        //dbHandler.remove(modal.getCode());
                     }
                   else {
                          holder.like_btn.setImageResource(R.drawable.like_button);
@@ -118,7 +130,7 @@ public class VisitorDisplayDataAdapter extends RecyclerView.Adapter<VisitorDispl
                            // dbHandler.addfavListData(modal.getName(), modal.getLastName(), modal.getVisitDate(), modal.getComment(), modal.getReasonofvisit(), modal.getCode());
                     }
 
-                }
+                }*/
             }
         });
 
@@ -131,7 +143,7 @@ public class VisitorDisplayDataAdapter extends RecyclerView.Adapter<VisitorDispl
                 Bundle bundle = new Bundle();
                 bundle.putString("NAME", modal.getName());
                 bundle.putString("LASTNAME", modal.getLastName());
-                bundle.putString("VISITREASON", modal.getReasonofvisit());
+                bundle.putString("VISITREASON", modal.getReasonOfVisit());
                 bundle.putString("VISITDATE", modal.getVisitDate());
                 bundle.putString("COMMENT", modal.getComment());
                 bundle.putString("CODE", modal.getCode());
@@ -157,7 +169,6 @@ public class VisitorDisplayDataAdapter extends RecyclerView.Adapter<VisitorDispl
     public int getItemCount() {
         return visitorData.size();
     }
-
 
 
     @Override
@@ -214,7 +225,7 @@ public class VisitorDisplayDataAdapter extends RecyclerView.Adapter<VisitorDispl
             like_btn = itemView.findViewById(R.id.like_btn);
             if (like_btn.isClickable()) {
                 like_btn.setImageResource(R.drawable.heart);
-             }
+            }
         }
         /*@Override
         public void onClick(View view) {

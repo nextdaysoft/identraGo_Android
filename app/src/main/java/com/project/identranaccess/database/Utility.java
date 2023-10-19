@@ -1,7 +1,12 @@
 package com.project.identranaccess.database;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
+
+import com.project.identranaccess.model.RegisterDataModel;
 
 public class Utility {
 
@@ -50,4 +55,28 @@ public class Utility {
     }
 
 
+    public static void addUserId(Context context, String uid, String value) {
+        SharedPreferences.Editor editor = context.getSharedPreferences("Preferences_", Context.MODE_PRIVATE).edit();
+        editor.putString(uid, value);
+        editor.apply();
+        Log.e(TAG, "addUserId: "+uid);
+        Log.e(TAG, "addUserId: "+value);
+    }
+
+    public static String getUserId(Context context, String uid){
+        SharedPreferences prefs = context.getSharedPreferences("Preferences_", Context.MODE_PRIVATE);
+        return prefs.getString(uid, "");
+
+    }
+
+    public static void addObject(Context context, String object, RegisterDataModel registerDataModel) {
+        SharedPreferences.Editor editor = context.getSharedPreferences("Preferences_", Context.MODE_PRIVATE).edit();
+        editor.putString(object, registerDataModel.getUserId());
+        editor.apply();
+    }
+    public static String getObject(Context context, String object){
+        SharedPreferences prefs = context.getSharedPreferences("Preferences_", Context.MODE_PRIVATE);
+        return prefs.getString(object, "");
+
+    }
 }

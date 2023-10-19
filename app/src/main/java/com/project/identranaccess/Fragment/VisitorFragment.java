@@ -1,6 +1,5 @@
 package com.project.identranaccess.Fragment;
 
-import static android.content.ContentValues.TAG;
 import static android.content.Context.WINDOW_SERVICE;
 
 import android.app.DatePickerDialog;
@@ -18,25 +17,20 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.DatePicker;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.gson.Gson;
 import com.project.identranaccess.Activity.QRPageActivity;
 import com.project.identranaccess.R;
-import com.project.identranaccess.database.MyLocalDatabase;
 import com.project.identranaccess.database.RetrofitClient;
 import com.project.identranaccess.database.Utility;
 import com.project.identranaccess.databinding.FragmentVisitorBinding;
-import com.project.identranaccess.model.FavData;
 import com.project.identranaccess.model.QRClass;
-import com.google.gson.Gson;
 import com.project.identranaccess.model.VisitorData;
 
 import java.util.ArrayList;
@@ -55,7 +49,7 @@ import retrofit2.Response;
  */
 public class VisitorFragment extends Fragment {
     FragmentVisitorBinding binding;
-    public MyLocalDatabase myLocalDatabase;
+    // public MyLocalDatabase myLocalDatabase;
     Context mContext;
     int i = 0;
     private static final String ARG_PARAM1 = "param1";
@@ -70,7 +64,7 @@ public class VisitorFragment extends Fragment {
     boolean clicked = true;
     boolean value = true;
     FirebaseFirestore db;
-
+    VisitorData dataModel;
 
     public VisitorFragment() {
 
@@ -101,8 +95,9 @@ public class VisitorFragment extends Fragment {
         binding = FragmentVisitorBinding.inflate(inflater, container, false);
         mContext = getActivity();
 
-        myLocalDatabase = new MyLocalDatabase(mContext);
-        db =  FirebaseFirestore.getInstance();
+        //  myLocalDatabase = new MyLocalDatabase(mContext);
+        db = FirebaseFirestore.getInstance();
+        dataModel = new VisitorData();
 
         callQrApi();
 
@@ -116,7 +111,7 @@ public class VisitorFragment extends Fragment {
             String CODETV = bundle_data.getString("CODE");
             String code = bundle_data.getString("FirstCODE");
 
-            Log.e("myApp", "onCreateView: " + NameVT + LastNameVT + VisitReasonVT + DateVT + commentTV + CODETV+code);
+            Log.e("myApp", "onCreateView: " + NameVT + LastNameVT + VisitReasonVT + DateVT + commentTV + CODETV + code);
             binding.fullNameET.setText(NameVT);
             binding.lastNameET.setText(LastNameVT);
             binding.reasonForET.setText(VisitReasonVT);
@@ -136,7 +131,7 @@ public class VisitorFragment extends Fragment {
 
             qrGenerateMethod(CODETV);
 
-            if(code!=null){
+            if (code != null) {
                 binding.fullNameET.setText(NameVT);
                 binding.lastNameET.setText(LastNameVT);
                 binding.reasonForET.setText(VisitReasonVT);
@@ -167,7 +162,7 @@ public class VisitorFragment extends Fragment {
         binding.swOnOff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Long tsLong = System.currentTimeMillis()/1000;
+                Long tsLong = System.currentTimeMillis() / 1000;
                 String ts = tsLong.toString();
 
                 if (binding.fullNameET.getText().toString().isEmpty()) {
@@ -176,16 +171,13 @@ public class VisitorFragment extends Fragment {
                 } else if (binding.lastNameET.getText().toString().isEmpty()) {
                     binding.lastNameET.setError("por favor ingresa el apellido");
                     binding.lastNameET.requestFocus();
-                }
-                else if (binding.reasonForET.getText().toString().isEmpty()) {
+                } else if (binding.reasonForET.getText().toString().isEmpty()) {
                     binding.reasonForET.setError("Por favor ingrese el motivo de la visita");
                     binding.reasonForET.requestFocus();
-                }
-                else if (binding.visitDateET.getText().toString().isEmpty()) {
+                } else if (binding.visitDateET.getText().toString().isEmpty()) {
                     binding.visitDateET.setError("Por favor ingrese la fecha de visit");
                     binding.visitDateET.requestFocus();
-                }
-                else if (binding.CommentET.getText().toString().isEmpty()) {
+                } else if (binding.CommentET.getText().toString().isEmpty()) {
                     binding.CommentET.setError("Por favor ingrese el comentario");
                     binding.CommentET.requestFocus();
                 } else {
@@ -204,16 +196,16 @@ public class VisitorFragment extends Fragment {
                                 startActivity(intent);
 
                                 addDatatoFirebase(binding.fullNameET.getText().toString().trim(), binding.lastNameET.getText().toString().trim(), binding.visitDateET.getText().toString().trim()
-                                        , binding.reasonForET.getText().toString().trim(), binding.CommentET.getText().toString().trim(), myheroList.get(0).getCode(),ts);
+                                        , binding.reasonForET.getText().toString().trim(), binding.CommentET.getText().toString().trim(), myheroList.get(0).getCode(), ts, true);
 
-                                addfavListData(binding.fullNameET.getText().toString().trim(), binding.lastNameET.getText().toString().trim(),
-                                        binding.reasonForET.getText().toString().trim(), binding.visitDateET.getText().toString().trim(), binding.CommentET.getText().toString().trim(), myheroList.get(0).getCode(),ts);
+                                //   addfavListData(binding.fullNameET.getText().toString().trim(), binding.lastNameET.getText().toString().trim(),
+                                //    binding.reasonForET.getText().toString().trim(), binding.visitDateET.getText().toString().trim(), binding.CommentET.getText().toString().trim(), myheroList.get(0).getCode(),ts);
                             }
 
                             saveMethod(i);
                             setnullText();
                         } else {
-                            Log.e("Cibstsjgbksgbksbgsb ", "elseeeeeeeeeeeeeeeeeee"+myheroList.size());
+                            Log.e("Cibstsjgbksgbksbgsb ", "elseeeeeeeeeeeeeeeeeee" + myheroList.size());
 
                             i = Utility.getPreferences(requireActivity(), "QrCodeId", 0) + 1;
                             if (Utility.getPreferences(requireActivity(), "QrCodeId", 0) <= myheroList.size()) {
@@ -222,10 +214,10 @@ public class VisitorFragment extends Fragment {
                                 startActivity(intent);
 
                                 addDatatoFirebase(binding.fullNameET.getText().toString().trim(), binding.lastNameET.getText().toString().trim(), binding.visitDateET.getText().toString().trim()
-                                        , binding.reasonForET.getText().toString().trim(), binding.CommentET.getText().toString().trim(), myheroList.get(i).getCode(),ts);
+                                        , binding.reasonForET.getText().toString().trim(), binding.CommentET.getText().toString().trim(), myheroList.get(i).getCode(), ts, true);
 
-                                addfavListData(binding.fullNameET.getText().toString().trim(), binding.lastNameET.getText().toString().trim(),
-                                        binding.reasonForET.getText().toString().trim(), binding.visitDateET.getText().toString().trim(), binding.CommentET.getText().toString().trim(), myheroList.get(i).getCode(),ts);
+                                //   addfavListData(binding.fullNameET.getText().toString().trim(), binding.lastNameET.getText().toString().trim(),
+                                //    binding.reasonForET.getText().toString().trim(), binding.visitDateET.getText().toString().trim(), binding.CommentET.getText().toString().trim(), myheroList.get(i).getCode(),ts);
                             }
 
                             Log.e("sgcvecgertcewtw ", i + "");
@@ -265,7 +257,7 @@ public class VisitorFragment extends Fragment {
         binding.completeRegBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Long tsLong = System.currentTimeMillis()/1000;
+                Long tsLong = System.currentTimeMillis() / 1000;
                 String ts = tsLong.toString();
 
                 if (binding.fullNameET.getText().toString().isEmpty()) {
@@ -274,19 +266,10 @@ public class VisitorFragment extends Fragment {
                 } else if (binding.lastNameET.getText().toString().isEmpty()) {
                     binding.lastNameET.setError("por favor ingresa el apellido");
                     binding.lastNameET.requestFocus();
-                }
-                /*else if (binding.reasonForET.getText().toString().isEmpty()) {
-                    binding.reasonForET.setError("Por favor ingrese el motivo de la visita");
-                    binding.reasonForET.requestFocus();
-                }*/ else if (binding.visitDateET.getText().toString().isEmpty()) {
+                } else if (binding.visitDateET.getText().toString().isEmpty()) {
                     binding.visitDateET.setError("Por favor ingrese la fecha de visit");
                     binding.visitDateET.requestFocus();
-                }
-                /*else if (binding.CommentET.getText().toString().isEmpty()) {
-                    binding.CommentET.setError("Por favor ingrese el comentario");
-                    binding.CommentET.requestFocus();
-                }*/ else {
-
+                } else {
                     if (Utility.getPreferences(requireActivity(), "QrCodeId", 0) == 0) {
                         Log.e("Cibstsjgbksgbksbgsb ", "iffffffffffffff");
 
@@ -298,10 +281,9 @@ public class VisitorFragment extends Fragment {
                             startActivity(intent);
 
                             addDatatoFirebase(binding.fullNameET.getText().toString().trim(), binding.lastNameET.getText().toString().trim(), binding.visitDateET.getText().toString().trim()
-                                    , binding.reasonForET.getText().toString().trim(), binding.CommentET.getText().toString().trim(), myheroList.get(0).getCode(),ts);
+                                    , binding.reasonForET.getText().toString().trim(), binding.CommentET.getText().toString().trim(), myheroList.get(0).getCode(), ts, false);
 
                         }
-
                         saveMethod(i);
                         setnullText();
 
@@ -315,7 +297,8 @@ public class VisitorFragment extends Fragment {
                             startActivity(intent);
 
                             addDatatoFirebase(binding.fullNameET.getText().toString().trim(), binding.lastNameET.getText().toString().trim(), binding.visitDateET.getText().toString().trim()
-                                    , binding.reasonForET.getText().toString().trim(), binding.CommentET.getText().toString().trim(), myheroList.get(i).getCode(),ts);     }
+                                    , binding.reasonForET.getText().toString().trim(), binding.CommentET.getText().toString().trim(), myheroList.get(i).getCode(), ts, false);
+                        }
 
                         Log.e("sgcvecgertcewtw ", i + "");
                         Log.e("cwfwefwcxwcr", myheroList.get(i).getCode() + "");
@@ -332,8 +315,8 @@ public class VisitorFragment extends Fragment {
     private void addfavListData(String name, String lastname, String visitdata, String reason, String comment, String code, String ts) {
         CollectionReference dbCourses = db.collection("favouriteUserList");
 
-        FavData favdata = new FavData( name,  lastname,  visitdata,  reason,  comment,  code,ts);
-        dbCourses.add(favdata).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        // FavData favdata = new FavData( name,  lastname,  visitdata,  reason,  comment,  code,ts);
+        /*dbCourses.add().addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
@@ -343,29 +326,28 @@ public class VisitorFragment extends Fragment {
             public void onFailure(@NonNull Exception e) {
                 Log.w(TAG, "Error adding document", e);
             }
-        });
+        });*/
 
     }
 
-    private void addDatatoFirebase(String name, String lastname, String visitData, String reasonofvisit, String comment, String code, String ts) {
-
-        CollectionReference dbCourses = db.collection("createNewUser");
-
+    private void addDatatoFirebase(String name, String lastname, String visitData, String reasonofvisit, String comment, String code, String ts, boolean b) {
         // adding our data to our courses object class.
-        VisitorData dataModel = new VisitorData( name,  lastname,  visitData,  reasonofvisit,  comment,  code,ts);
+        dataModel.setName(name);
+        dataModel.setLastName(lastname);
+        dataModel.setVisitDate(visitData);
+        dataModel.setReasonOfVisit(reasonofvisit);
+        dataModel.setComment(comment);
+        dataModel.setId(Utility.getUserId(mContext, "userId"));
+        dataModel.setCode(code);
+        dataModel.setClicked(b);
+        dataModel.setUniqueId(ts);
 
-        dbCourses.add(dataModel).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        db.collection("createNewUser").document(ts).set(dataModel).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Error adding document", e);
+            public void onSuccess(Void unused) {
+
             }
         });
-
 
     }
 

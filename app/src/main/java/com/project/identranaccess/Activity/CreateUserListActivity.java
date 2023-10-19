@@ -17,14 +17,14 @@ public class CreateUserListActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityCreateUserListBinding binding;
 
-    MyLocalDatabase dbHelper;
+  //  MyLocalDatabase dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding = ActivityCreateUserListBinding.inflate(getLayoutInflater());
-        dbHelper=new MyLocalDatabase(this);
+       // dbHelper=new MyLocalDatabase(this);
         setContentView(binding.getRoot());
 
       String Name=  binding.nameRegData.getText().toString();

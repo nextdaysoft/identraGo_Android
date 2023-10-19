@@ -1,11 +1,16 @@
 package com.project.identranaccess.Fragment;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,42 +18,23 @@ import androidx.fragment.app.DialogFragment;
 
 import com.project.identranaccess.R;
 
-public class LottieDialogFragment extends DialogFragment {
 
-    public static LottieDialogFragment newInstance() {
+    public class LottieDialogFragment extends Dialog {
 
-        Bundle args = new Bundle();
+        public LottieDialogFragment(@NonNull Context context) {
+            super(context);
 
-        LottieDialogFragment fragment = new LottieDialogFragment();
-        fragment.setArguments(args);
-        return fragment;
+            WindowManager.LayoutParams params = getWindow().getAttributes();
+            params.gravity = Gravity.CENTER;
+            getWindow().setAttributes(params);
+            getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            setTitle(null);
+            setCancelable(false);
+            setOnCancelListener(null);
+            View view = LayoutInflater.from(context).inflate(R.layout.lottie, null);
+            setContentView(view);
+        }
+
+
     }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.lottie, container, false);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        setStyle(DialogFragment.STYLE_NO_FRAME, android.R.style.Theme);
-    }
-
-    public void showProgressDialog(){
-        new LottieDialogFragment().newInstance().
-                show(requireActivity().getSupportFragmentManager(), "");
-    }
-
-    public void hideDialog() {
-        dismiss();
-    }
-}
 

@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.project.identranaccess.Fragment.LottieDialogFragment;
 import com.project.identranaccess.R;
+import com.project.identranaccess.database.Utility;
 import com.project.identranaccess.databinding.ActivityRegistrationPageBinding;
 import com.project.identranaccess.model.RegisterDataModel;
 
@@ -26,8 +27,7 @@ public class RegistrationPage extends AppCompatActivity {
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     String email;
     private FirebaseAuth mAuth;
-
-    LottieDialogFragment dialogFragment;
+    LottieDialogFragment loader;
     RegisterDataModel registerDataModel;
     FirebaseFirestore db;
 
@@ -42,7 +42,7 @@ public class RegistrationPage extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         //     firebaseDatabase = FirebaseDatabase.getInstance();
         db = FirebaseFirestore.getInstance();
-        dialogFragment = new LottieDialogFragment();
+        loader = new LottieDialogFragment(this);
        /* binding.emailReg.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 if (email.matches(emailPattern) && s.length() > 0) {
@@ -63,25 +63,23 @@ public class RegistrationPage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (validation()) {
+                    loader.show();
                     mAuth.createUserWithEmailAndPassword(binding.emailReg.getText().toString().trim(), binding.passwordReg.getText().toString().trim()).addOnCompleteListener(task -> {
 
                         if (task.isSuccessful()) {
+                            loader.cancel();
 
                             if (task.getResult() != null && task.getResult().getUser() != null) {
                                 registerDataModel.setEmail(task.getResult().getUser().getEmail());
                                 registerDataModel.setMobile(Objects.requireNonNull(binding.mobileNoEt.getText()).toString());
-                                registerDataModel.setPassword(Objects.requireNonNull(binding.passwordReg.getText()).toString());
-
-                                //   userModalClass.setUserToken(Utility.getPreferences(RegistrationPage.this, Constants.deviceToken, ""));
-                                //  registerDataModel.setLoginType("Email");
-
                                 registerDataModel.setUserId(task.getResult().getUser().getUid());
                                 createUser(task.getResult().getUser().getUid());
-
+                                Utility.addObject(getApplicationContext(),"Object",registerDataModel);
                             }
 
                         } else {
                             // hideProgress();
+                            loader.cancel();
                             Toast.makeText(RegistrationPage.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
                         }
 
@@ -123,6 +121,7 @@ public class RegistrationPage extends AppCompatActivity {
     }
 
     private void createUser(String uid) {
+
         db.collection("RegisterUser")
                 .document(uid)
                 .set(registerDataModel)
@@ -131,6 +130,7 @@ public class RegistrationPage extends AppCompatActivity {
                         Toast.makeText(this, "Register Successfully", Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(RegistrationPage.this, HomePageActivity.class);
                         startActivity(i);
+
                     } else {
                         //  hideProgress();
                         Toast.makeText(RegistrationPage.this, "something went wrong", Toast.LENGTH_SHORT).show();

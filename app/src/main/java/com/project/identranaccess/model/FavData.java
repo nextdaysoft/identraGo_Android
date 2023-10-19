@@ -2,53 +2,47 @@ package com.project.identranaccess.model;
 
 public class FavData {
     private String Name;
-    private String lastName;
-    private String visitDate;
+    private String LastName;
+    private String VisitDate;
+    private String ReasonOfVisit;
+    private String Comment;
+    private String Code;
+    private String Id;
+    private Boolean clicked;
 
-    private String reasonofvisit;
-    private String comment;
-    private String code;
-    private String id;
+    private String uniqueId;
 
-    public void setTruevalue(Boolean truevalue) {
-        this.truevalue = truevalue;
+    public String getUniqueId() {
+        return uniqueId;
     }
 
-    Boolean truevalue;
-
-
-
-
-    public String getId() {
-        return id;
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public Boolean getClicked() {
+        return clicked;
     }
 
-    public String getReasonofvisit() {
-        return reasonofvisit;
+    public String getReasonOfVisit() {
+        return ReasonOfVisit;
     }
 
-    public void setReasonofvisit(String reasonofvisit) {
-        this.reasonofvisit = reasonofvisit;
+    public void setReasonOfVisit(String reasonOfVisit) {
+        ReasonOfVisit = reasonOfVisit;
     }
 
-    public String getComment() {
-        return comment;
+    public void setClicked(Boolean clicked) {
+        this.clicked = clicked;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
 
     public String getCode() {
-        return code;
+        return Code;
     }
 
     public void setCode(String code) {
-        this.code = code;
+        this.Code = code;
     }
 
     public String getName() {
@@ -60,29 +54,38 @@ public class FavData {
     }
 
     public String getLastName() {
-        return lastName;
+        return LastName;
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        this.LastName = lastName;
     }
 
     public String getVisitDate() {
-        return visitDate;
+        return VisitDate;
     }
 
     public void setVisitDate(String visitData) {
-        this.visitDate = visitData;
+        this.VisitDate = visitData;
     }
 
 
-    public FavData(String name, String lastname, String visitData, String reason, String comment, String code, String id) {
-        this.Name = name;
-        this.lastName = lastname;
-        this.visitDate = visitData;
-        this.reasonofvisit = reason;
-        this.comment = comment;
-        this.code = code;
-        this.id = id;
+
+    public String getComment() {
+        return Comment;
     }
+
+    public void setComment(String comment) {
+        this.Comment = comment;
+    }
+
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String id) {
+        this.Id = id;
+    }
+
+
 }

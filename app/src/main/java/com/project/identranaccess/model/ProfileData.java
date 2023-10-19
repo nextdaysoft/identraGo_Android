@@ -8,17 +8,18 @@ public class ProfileData {
 
     public String  image;
     private String Name;
+    private String Location;
+    private String userId;
+
     private String email;
     private String mobile;
-    private String Pos;
-    Task<Uri> img;
 
-    public Task<Uri> getImg() {
-        return img;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setImg(Task<Uri> img) {
-        this.img = img;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getEmail() {
@@ -55,19 +56,19 @@ public class ProfileData {
 
 
 
-    public String getPos() {
-        return Pos;
+    public String getLocation() {
+        return Location;
     }
 
-    public void setPos(String pos) {
-        Pos = pos;
+    public void setLocation(String pos) {
+        Location = pos;
     }
 
-    public ProfileData(Uri img, String name, String email, String mobile, String pos) {
+   /* public ProfileData(Uri img, String name, String email, String mobile, String pos) {
         this.image= String.valueOf(img);
         this.Name=name;
         this.email=email;
         this.mobile=mobile;
         this.Pos=pos;
-    }
+    }*/
 }

@@ -2,21 +2,47 @@ package com.project.identranaccess.model;
 
 public class VisitorData {
     private String Name;
-    private String lastName;
-    private String visitDate;
-    private String reasonofvisit;
-    private String comment;
-    private String code;
-    private String id;
+    private String LastName;
+    private String VisitDate;
+    private String ReasonOfVisit;
+    private String Comment;
+    private String Code;
+    private String Id;
+    private Boolean clicked;
 
+    private String uniqueId;
+
+    public String getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
+    }
+
+    public Boolean getClicked() {
+        return clicked;
+    }
+
+    public String getReasonOfVisit() {
+        return ReasonOfVisit;
+    }
+
+    public void setReasonOfVisit(String reasonOfVisit) {
+        ReasonOfVisit = reasonOfVisit;
+    }
+
+    public void setClicked(Boolean clicked) {
+        this.clicked = clicked;
+    }
 
 
     public String getCode() {
-        return code;
+        return Code;
     }
 
     public void setCode(String code) {
-        this.code = code;
+        this.Code = code;
     }
 
     public String getName() {
@@ -28,55 +54,40 @@ public class VisitorData {
     }
 
     public String getLastName() {
-        return lastName;
+        return LastName;
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        this.LastName = lastName;
     }
 
     public String getVisitDate() {
-        return visitDate;
+        return VisitDate;
     }
 
     public void setVisitDate(String visitData) {
-        this.visitDate = visitData;
+        this.VisitDate = visitData;
     }
 
-    public String getReasonofvisit() {
-        return reasonofvisit;
-    }
 
-    public void setReasonofvisit(String reasonofvisit) {
-        this.reasonofvisit = reasonofvisit;
-    }
 
     public String getComment() {
-        return comment;
+        return Comment;
     }
 
     public void setComment(String comment) {
-        this.comment = comment;
+        this.Comment = comment;
     }
 
     public String getId() {
-        return id;
+        return Id;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.Id = id;
     }
 
-    public VisitorData(String name, String lastname, String visitData, String reasonofvisit, String comment, String code, String id) {
-        this.Name = name;
-        this.lastName = lastname;
-        this.visitDate = visitData;
-        this.reasonofvisit = reasonofvisit;
-        this.comment = comment;
-        this.code = code;
-        this.id = id;
 
-    }
 
 
 }

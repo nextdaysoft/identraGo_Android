@@ -6,12 +6,11 @@
     android:layout_height="100dp">
 
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/progressAnimationView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:id="@+id/animationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:lottie_rawRes="@raw/lottie"
         app:lottie_autoPlay="true"
-        app:lottie_fileName="loader.json"
-        app:lottie_loop="true"
-        android:layout_centerInParent="true"/>
+        app:lottie_loop="true"/>
 
 </RelativeLayout>

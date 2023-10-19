@@ -55,6 +55,16 @@ public class MyLocalDatabase extends SQLiteOpenHelper {
     super(context, DB_NAME, null, DB_VERSION);
   }
 
+    @Override
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+
+    }
+/*
   @Override
   public void onCreate(SQLiteDatabase db) {
     String query = "CREATE TABLE " + TABLE_NAME + " ("
@@ -78,12 +88,12 @@ public class MyLocalDatabase extends SQLiteOpenHelper {
             + FAVID_Time + " TEXT)";
 
 
-/*    String queryProfile = "CREATE TABLE " + USER_TABLE_NAME + " ("
+*//*    String queryProfile = "CREATE TABLE " + USER_TABLE_NAME + " ("
             + ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + user_PROFILE_POS_name + " TEXT,"
             + user_PROFILE_POS_last + " TEXT,"
             + user_PROFILE_POS_email + " TEXT,"
-            + user_PROFILE_POS_password + " TEXT)";*/
+            + user_PROFILE_POS_password + " TEXT)";*//*
 
 
  String profile_query = "CREATE TABLE " + PROFILE_TABLE_NAME + " ("
@@ -162,7 +172,7 @@ public class MyLocalDatabase extends SQLiteOpenHelper {
     }
 
 
-    /*public ArrayList<ProfileData> profileData() {
+    *//*public ArrayList<ProfileData> profileData() {
 
     SQLiteDatabase db = this.getReadableDatabase();
     Cursor cursorVisitdata = db.rawQuery("SELECT * FROM " + PROFILE_TABLE_NAME, null);
@@ -180,8 +190,8 @@ public class MyLocalDatabase extends SQLiteOpenHelper {
     cursorVisitdata.close();
     return profiledataArrayList;
   }
-*/
-/*  public void addUserListData(String name, String lastname, String email, String password) {
+*//*
+*//*  public void addUserListData(String name, String lastname, String email, String password) {
 
     SQLiteDatabase db = this.getWritableDatabase();
     ContentValues values = new ContentValues();
@@ -211,7 +221,7 @@ public class MyLocalDatabase extends SQLiteOpenHelper {
     }
     cursor.close();
     return dataArrayList;
-  }*/
+  }*//*
 
   public ArrayList<FavData> fav_listData() {
 
@@ -238,7 +248,7 @@ public class MyLocalDatabase extends SQLiteOpenHelper {
   }
   public void addfavListData(String name, String lastName, String reasonofvisit, String modalReasonofvisit, String code, String modalCode, String ts) {
     SQLiteDatabase db = this.getWritableDatabase();
-/*    Cursor cursor = db.rawQuery("SELECT "+name+ " FROM "+FAV_TABLE_NAME+" WHERE "+
+*//*    Cursor cursor = db.rawQuery("SELECT "+name+ " FROM "+FAV_TABLE_NAME+" WHERE "+
             NAME_COL + " = '"+TABLE_NAME +"'",null);
     Log.e("data", "cursor is matched: "+name);
     Log.e("data", "cursor is matched: "+nameValue );
@@ -252,7 +262,7 @@ public class MyLocalDatabase extends SQLiteOpenHelper {
     Log.e("data", "cursor is matched: "+name );
 
 
-      } else {*/
+      } else {*//*
         ContentValues values = new ContentValues();
         values.put(FAV_NAME_COL, name);
         values.put(FAV_LASTNAME_COL, lastName);
@@ -270,7 +280,7 @@ public class MyLocalDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(FAV_TABLE_NAME, "favcode=?", new String[]{code});
         db.close();
-  }
+  }*/
 
 
 }

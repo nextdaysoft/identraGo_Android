@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
@@ -16,13 +17,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.project.identranaccess.Activity.EditProfileActivity;
 import com.project.identranaccess.database.MyLocalDatabase;
+import com.project.identranaccess.database.Utility;
 import com.project.identranaccess.databinding.FragmentProfileBinding;
 import com.project.identranaccess.model.ProfileData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,10 +49,11 @@ public class ProfileFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    //private ArrayList<ProfileData> profileDataArraylist;
-    private MyLocalDatabase dbHandler;
+    public List<ProfileData> profileDataArraylist;
     Context mContext;
     String name ;
+    FirebaseFirestore db;
+    ProgressBar progressBar;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -79,27 +91,8 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         mContext = getActivity();
-        dbHandler = new MyLocalDatabase(mContext);
-      //  if(dbHandler.profileData()!=null) {
-        //    profileDataArraylist = dbHandler.profileData();
-
-           // if(!profileDataArraylist.isEmpty()){
-              //  for(int i = 0;i<profileDataArraylist.size();i++) {
-                   // binding.userNameTV.setText(profileDataArraylist.get(i).getName());
-               //     binding.Admin.setText(profileDataArraylist.get(i).getAdministration());
-                   // binding.pos.setText(profileDataArraylist.get(i).getPos());
-
-              //      byte[] byteArray = profileDataArraylist.get(i).getImage();
-                 //   Log.e("bitmap", "onCreateView: "+profileDataArraylist.get(i).getImage());
-              //      Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-               //     binding.profileImage.setImageBitmap(bmp);
-             //   }
-    //   }
-          //  bitmap = dbHandler.getImage(name);
-          //  binding.profileImage.setImageBitmap(profileDataArraylist.get(0).getImage());
-         //   Log.d("details", "onCreateView: "+bitmap);
-
-       /**/
+        db= FirebaseFirestore.getInstance();
+        progressBar= new ProgressBar(mContext);
 
         binding.privacyPolicyLL.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,6 +137,22 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        db.collection("RegisterUser").whereEqualTo("userId",Utility.getUserId(mContext,"userId"))
+                .whereEqualTo("userId",Utility.getUserId(mContext,"userId"))
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        profileDataArraylist = task.getResult().toObjects(ProfileData.class);
+                        for(int i =0;i<profileDataArraylist.size();i++){
+                            Glide.with(mContext).load(profileDataArraylist.get(i).getImage()).into(binding.profileImage);
+
+                          //  Glide.get().load(profileDataArraylist.get(i).getImage()).into(binding.profileImage);
+                             binding.locationId.setText(profileDataArraylist.get(i).getLocation());
+                             binding.EmailId.setText(profileDataArraylist.get(i).getEmail());
+                             binding.userNameTV.setText(profileDataArraylist.get(i).getName());
+                        }
+                    }
+                });
      //   viewImage();
         return binding.getRoot();
     }

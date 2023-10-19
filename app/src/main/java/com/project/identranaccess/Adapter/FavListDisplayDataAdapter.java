@@ -21,13 +21,15 @@ import com.project.identranaccess.Activity.QRPageActivity;
 import com.project.identranaccess.Fragment.VisitorFragment;
 import com.project.identranaccess.R;
 import com.project.identranaccess.model.FavData;
+import com.project.identranaccess.model.VisitorData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FavListDisplayDataAdapter extends RecyclerView.Adapter<FavListDisplayDataAdapter.ViewHolder> {
-    private ArrayList<FavData> userListModels;
+    private List<FavData> userListModels;
     private Context context;
-    public FavListDisplayDataAdapter(ArrayList<FavData> userList, Context mContext) {
+    public FavListDisplayDataAdapter(List<FavData> userList, Context mContext) {
         this.userListModels = userList;
         this.context = mContext;
     }
@@ -42,10 +44,17 @@ public class FavListDisplayDataAdapter extends RecyclerView.Adapter<FavListDispl
     @Override
     public void onBindViewHolder(@NonNull FavListDisplayDataAdapter.ViewHolder holder, int position) {
         FavData modal = userListModels.get(position);
-        holder.reasonFor_ET.setText(modal.getVisitDate());
-        String combinetext= modal.getName()+"  "+modal.getLastName();
-        holder.like_btn.setImageResource(R.drawable.heart);
-        holder.name.setText(combinetext);
+      //  if (modal.getClicked()){
+            holder.create_visit_LL.setVisibility(View.VISIBLE);
+            holder.reasonFor_ET.setText(modal.getReasonOfVisit());
+            String combinetext= modal.getName()+"  "+modal.getLastName();
+            holder.like_btn.setImageResource(R.drawable.heart);
+            holder.name.setText(combinetext);
+      //  }
+     //   else{
+           // holder.create_visit_LL.setVisibility(View.GONE);
+       // }
+
 
         holder.create_visit_LL.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +66,7 @@ public class FavListDisplayDataAdapter extends RecyclerView.Adapter<FavListDispl
                 bundle.putString("NAME", modal.getName());
                 bundle.putString("LASTNAME", modal.getLastName());
                 bundle.putString("VISITREASON", modal.getVisitDate());
-                bundle.putString("VISITDATE", modal.getReasonofvisit());
+                bundle.putString("VISITDATE", modal.getReasonOfVisit());
                 bundle.putString("COMMENT", modal.getComment());
                 bundle.putString("CODE", modal.getCode());
                 bundle.putString("FirstCODE", "1");
