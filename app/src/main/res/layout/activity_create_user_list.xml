@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".Activity.CreateUserListActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar_LL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/baseline_arrow_back_ios_new_24"/>
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:padding="10dp"
+                android:text="NOMBRE COMPLETO"
+                android:textColor="@color/black" />
+
+
+            <EditText
+                android:id="@+id/name_regData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/shapeemail"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:padding="10dp"
+                android:text="@string/user"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/user_regData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/shapeemail"
+                android:padding="10dp"
+                android:hint=""
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:padding="10dp"
+                android:text="CORREO ELECTRÓNICO"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/email_regData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/shapeemail"
+                android:hint="CORREO ELECTRÓNICO"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:padding="10dp"
+                android:text="CONTRASEÑA"
+                android:textColor="@color/black" />
+
+            <RelativeLayout
+                android:id="@+id/password_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/shapeemail"
+                android:padding="3dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+                <EditText
+                    android:id="@+id/password_regData"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="15dp"
+                    android:background="@color/white"
+                    android:hint="CONTRASEÑA"
+                    android:inputType="textPassword"
+                    android:singleLine="true"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/show_pass_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="MOSTRAR" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:backgroundTint="@color/purple_500"
+                    android:text="RESPONSABLE PRINCIPAL" />
+
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/sw_dataSaveBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="30dp"
+                    android:layout_weight=".7"
+                    android:buttonTint="@color/purple_500"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:thumb="@drawable/custom_thumb"
+                    app:track="@drawable/custom_track" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/User_listsaveData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/shapesignup"
+                android:gravity="center"
+                android:padding="14dp"
+                android:text="GUARDAR"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shapeemail"
+                android:gravity="center"
+                android:padding="14dp"
+                android:text="CANCELAR"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</LinearLayout>

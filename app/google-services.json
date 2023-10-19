@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1079259015217",
+    "project_id": "identran-go",
+    "storage_bucket": "identran-go.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1079259015217:android:154cc6e7577526496c0d10",
+        "android_client_info": {
+          "package_name": "com.dhakad.identra"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPOBLhvaBLORiWCLHVLHScWgksC3K14e8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1079259015217:android:d00a32543a90a29c6c0d10",
+        "android_client_info": {
+          "package_name": "com.project.identranaccess"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPOBLhvaBLORiWCLHVLHScWgksC3K14e8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

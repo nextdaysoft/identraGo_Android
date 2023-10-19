@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".Fragment.HistoricalListFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp">
+
+        <ImageView
+            android:id="@+id/backIv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:tint="@color/sky"
+            android:src="@drawable/baseline_arrow_back_ios_new_24" />
+
+        <TextView
+            android:id="@+id/tv_atras"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_toRightOf="@+id/backIv"
+            android:text="ATRAS"
+            android:textColor="@color/sky"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="60dp"
+            android:layout_toRightOf="@+id/tv_atras"
+            android:gravity="center"
+            android:text="REINGRESO"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F1F0ED"
+        android:layout_marginTop="10dp"
+        android:padding="10dp">
+
+        <EditText
+            android:id="@+id/search"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/baseline_search_24"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/shapeemail"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="10dp"
+            android:visibility="gone"
+             android:src="@drawable/list_icon"
+            android:layout_alignParentEnd="true"
+            android:text="Create Visit"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/favList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/shapesignup"
+        android:padding="10dp"
+        android:layout_alignParentEnd="true"
+        android:text="REINGRESO"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+   <androidx.recyclerview.widget.RecyclerView
+       android:id="@+id/RV_display_visitorData"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"/>
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/generate_qr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="14dp"
+            android:backgroundTint="@color/teal_200"
+            app:srcCompat="@drawable/baseline_add_24" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
